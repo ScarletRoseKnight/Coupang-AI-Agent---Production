@@ -9,11 +9,11 @@ An enterprise-grade blueprint and proof-of-concept architecture for high-through
 ## 📂 Project Structure / 디렉토리 구조
 
 ```text
-├── 📂 orchestration/     # Airflow ETL Pipeline DAG
-├── 📂 pipelines/         # Spark Batch Processing & Ray Distributed Embedding
 ├── 📂 core/              # AsyncIO Gateway & Triton High-Throughput Client
+├── 📂 deployment/        # Kubernetes / Kubeflow Manifests & Triton Models config.pbtxt
 ├── 📂 infrastructure/    # DB Abstraction Interface (Qdrant & Milvus Impl)
-└── 📂 deployment/        # Kubernetes / Kubeflow Manifests & Triton Models config.pbtxt
+├── 📂 orchestration/     # Airflow ETL Pipeline DAG
+└── 📂 pipelines/         # Spark Batch Processing & Ray Distributed Embedding
 ```
 ## 🏗️ System Topology & Dataflow / 시스템 구조도
 
