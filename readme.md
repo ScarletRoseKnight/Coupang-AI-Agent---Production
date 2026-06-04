@@ -46,9 +46,24 @@ An enterprise-grade blueprint and proof-of-concept architecture for high-through
  │                          (Stage-1 Pre-filtered Search) │
  └────────────────────────────────────────────────────────┘
 ```
+## 🛠️ Technology Stack / 기술 스택
 
+* **Data Lifecycle:** Apache Spark, Apache Airflow, BigQuery, SQL
+* **Distributed AI / MLOps:** Ray, PyTorch, Hugging Face Transformers, MLflow, Kubeflow
+* **Runtime & Serving:** Python AsyncIO, Triton Inference Server
+* **Vector DB Ecosystem:** Qdrant, Milvus
+* **Infrastructure:** Kubernetes Cluster
+
+## 🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적
+
+| Category | Component | Purpose / 활용 목적 |
+| :--- | :--- | :--- |
+| **ML & Search** | PyTorch, Cross-Encoder | 고정밀 문맥 매칭 및 검색 결과 실시간 재정렬(Re-ranking) 연산 |
+| **Vector Engine** | Qdrant, Milvus | 컴퓨트-스토리지 분리 구조 기반 대규모 벡터 인덱싱 및 필터링 |
+| **Data Platform** | Apache Spark, Ray | 페타바이트급 데이터 정제(ETL) 및 분산 GPU 임베딩 생성 자동화 |
+| **Serving / MLOps** | Triton, Kubernetes, Airflow | Dynamic Batching을 활용한 모델 추론 가속 및 파이프라인 배포 자동화 |
 ---
-## 🔍 Search Architecture Pipeline / 검색 파이프라인 구조
+## 🔍 Search Pipeline Architecture / 검색 파이프라인 구조
 
 The system employs a multi-stage approach to balance latency boundaries (<250ms p99 SLA) with high retrieval accuracy:
 
@@ -72,24 +87,6 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
 * **Core Agent Gateway:** Built with asynchronous Python (AsyncIO) and Hugging Face Tokenizers for ultra-fast, non-blocking request handling.
 * **Model Serving:** Powered by Triton Inference Server executing optimized PyTorch and Cross-Encoder models.
 * **Vector Indexing:** Uses a Qdrant or Milvus cluster to perform high-recall, pre-filtered Stage-1 vector search.
-
-## 🛠️ Technology Stack / 기술 스택
-
-* **Data Lifecycle:** Apache Spark, Apache Airflow, BigQuery, SQL
-* **Distributed AI / MLOps:** Ray, PyTorch, Hugging Face Transformers, MLflow, Kubeflow
-* **Runtime & Serving:** Python AsyncIO, Triton Inference Server
-* **Vector DB Ecosystem:** Qdrant, Milvus
-* **Infrastructure:** Kubernetes Cluster
-
-## 🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적
-
-| Category | Component | Purpose / 활용 목적 |
-| :--- | :--- | :--- |
-| **ML & Search** | PyTorch, Cross-Encoder | 고정밀 문맥 매칭 및 검색 결과 실시간 재정렬(Re-ranking) 연산 |
-| **Vector Engine** | Qdrant, Milvus | 컴퓨트-스토리지 분리 구조 기반 대규모 벡터 인덱싱 및 필터링 |
-| **Data Platform** | Apache Spark, Ray | 페타바이트급 데이터 정제(ETL) 및 분산 GPU 임베딩 생성 자동화 |
-| **Serving / MLOps** | Triton, Kubernetes, Airflow | Dynamic Batching을 활용한 모델 추론 가속 및 파이프라인 배포 자동화 |
-
 
 ## 🎯 Production SLA / 성능 목표
 
