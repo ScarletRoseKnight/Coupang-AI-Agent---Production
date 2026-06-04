@@ -68,8 +68,6 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
    * Top candidates are passed to Triton Inference Server.
    * A heavy Cross-Encoder model runs intense sequence-pair interactions to output final optimized product rankings.
 
----
-
 ## 🛠️ Technology Stack / 기술 스택
 
 * **Data Lifecycle:** Apache Spark, Apache Airflow, BigQuery, SQL
@@ -77,6 +75,8 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
 * **Runtime & Serving:** Python AsyncIO, Triton Inference Server
 * **Vector DB Ecosystem:** Qdrant, Milvus
 * **Infrastructure:** Kubernetes Cluster
+
+---
 
 📂 Project Structure / 디렉토리 구조
 ├── 📂 orchestration/     # Airflow ETL Pipeline DAG
