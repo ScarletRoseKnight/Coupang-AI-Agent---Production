@@ -1,10 +1,10 @@
-Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent
-대규모 트래픽 대응 초저지연 멀티 스테이지 상품 검색 에이전트
+#Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent
+#대규모 트래픽 대응 초저지연 멀티 스테이지 상품 검색 에이전트
 
-🇺🇸 Two-stage semantic search framework utilizing distributed processing (Spark/Ray), partitioned vector DBs (Qdrant/Milvus), and Triton Inference Server to hit a <250ms p99 SLA on petabyte catalogs.
-🇰🇷 대용량 데이터 처리(Spark/Ray)와 분산 벡터 DB(Qdrant/Milvus)를 Triton 및 AsyncIO로 엮어 p99 <250ms 초저지연을 달성한 엔터프라이즈급 2단계 검색 아키텍처.
+##🇺🇸 Two-stage semantic search framework utilizing distributed processing (Spark/Ray), partitioned vector DBs (Qdrant/Milvus), and Triton Inference Server to hit a <250ms p99 SLA on petabyte catalogs.
+##🇰🇷 대용량 데이터 처리(Spark/Ray)와 분산 벡터 DB(Qdrant/Milvus)를 Triton 및 AsyncIO로 엮어 p99 <250ms 초저지연을 달성한 엔터프라이즈급 2단계 검색 아키텍처.
 
-🏗️ System Architecture / 시스템 구조
+###🏗️ System Architecture / 시스템 구조
 ```text
  [ Raw E-Commerce Logs / Catalogs (SQL / BigQuery) ]
                         │
