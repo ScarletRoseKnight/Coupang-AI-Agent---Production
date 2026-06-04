@@ -81,8 +81,19 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
 * **Vector DB Ecosystem:** Qdrant, Milvus
 * **Infrastructure:** Kubernetes Cluster
 
-🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적CategoryComponentPurpose / 활용 목적ML & SearchPyTorch, Cross-Encoder고정밀 문맥 매칭 및 검색 결과 실시간 재정렬 연산Vector EngineQdrant, Milvus컴퓨트-스토리지 분리 구조 기반 대규모 벡터 인덱싱Data PlatformApache Spark, Ray페타바이트급 데이터 정제(ETL) 및 분산 GPU 임베딩 생성Serving/MLOpsTriton, Kubernetes, AirflowDynamic Batching을 활용한 모델 추론 가속 및 배포 자동화
+## 🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적
 
-🎯 Production SLA / 성능 목표1단계 벡터 검색 지연 시간: < 15ms (HNSW index pre-filtered)2단계 Triton 모델 추론 지연 시간: < 35ms (Dynamic batching queued)코어 게이트웨이 최종 p99 목표 지연 시간: < 120ms
+| Category | Component | Purpose / 활용 목적 |
+| :--- | :--- | :--- |
+| **ML & Search** | PyTorch, Cross-Encoder | 고정밀 문맥 매칭 및 검색 결과 실시간 재정렬(Re-ranking) 연산 |
+| **Vector Engine** | Qdrant, Milvus | 컴퓨트-스토리지 분리 구조 기반 대규모 벡터 인덱싱 및 필터링 |
+| **Data Platform** | Apache Spark, Ray | 페타바이트급 데이터 정제(ETL) 및 분산 GPU 임베딩 생성 자동화 |
+| **Serving / MLOps** | Triton, Kubernetes, Airflow | Dynamic Batching을 활용한 모델 추론 가속 및 파이프라인 배포 자동화 |
+
+
+## 🎯 Production SLA / 성능 목표
+
+* **Stage-1 벡터 검색 지연 시간:** `< 15ms` (HNSW index pre-filtered)
+* **Stage-2 Triton 모델 추론 지연 시간:** `< 35ms` (Dynamic batching queued)
+* **코어 게이트웨이 최종 p99 목표 지연 시간:** `< 120ms`
 ---
-
