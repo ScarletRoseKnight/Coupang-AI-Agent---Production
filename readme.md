@@ -1,15 +1,15 @@
-# Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent
-### 쿠팡 대규모 트래픽 대응 초저지연 멀티 스테이지 상품 검색 에이전트
+Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent
+쿠팡 대규모 트래픽 대응 초저지연 멀티 스테이지 상품 검색 에이전트
+🇺🇸 Resume Headline: An enterprise-grade, two-stage semantic search architecture that integrates distributed data pipelines (Spark/Ray) and partitioned vector clusters (Qdrant/Milvus) via an AsyncIO gateway and Triton Inference Server to achieve a sub-250ms p99 SLA over petabyte-scale catalogs.
+
+🇰🇷 이력서 헤드라인: 페타바이트급 카탈로그 환경에서 데이터 처리(Spark/Ray)와 분산 벡터 검색(Qdrant/Milvus)을 비동기 게이트웨이 및 Triton 추론 서버로 엮어 <250ms p99 초저지연을 달성한 엔터프라이즈급 2단계(Two-Stage) 검색 플랫폼 아키텍처.
 
 An enterprise-grade blueprint and proof-of-concept architecture for high-throughput, asymmetric multi-stage semantic product search. This repository models how to handle petabyte-scale e-commerce catalogs under strict transaction and latency boundaries (<250ms p99 SLA) using a decoupled data lifecycle and state-of-the-art MLOps tools.
 
 본 리포지토리는 고처리량 및 비대칭형 멀티 스테이지 시맨틱 상품 검색을 구현한 엔터프라이즈급 아키텍처 청사진입니다. 분리된 데이터 라이프사이클과 최신 MLOps 도구를 활용하여, 엄격한 트랜잭션 및 지연 시간 제약 조건(<250ms p99 SLA) 하에서 페타바이트 규모의 이커머스 카탈로그를 처리하는 방법을 모델링합니다.
 
----
-
-## 🏗️ System Topology & Dataflow / 시스템 구조도
-
-```text
+🏗️ System Topology & Dataflow / 시스템 구조도
+Plaintext
  [ Raw E-Commerce Logs / Catalogs (SQL / BigQuery) ]
                         │
                         ▼ (Scheduled Orchestration via Apache Airflow)
@@ -37,8 +37,7 @@ An enterprise-grade blueprint and proof-of-concept architecture for high-through
  │            └───────────► [ Qdrant / Milvus Cluster ]  │
  │                          (Stage-1 Pre-filtered Search) │
  └────────────────────────────────────────────────────────┘
-
- 🚀 Project Overview (STAR Framework)
+🚀 Project Overview (STAR Framework)
 🇺🇸 English Version
 Situation
 E-commerce platforms handling hundreds of millions of SKUs and massive concurrent traffic face significant conversion drop-offs due to traditional keyword search limitations. Users struggle when combining loose semantic intent ("heavy-duty waterproof camping gear for a rainy weekend") with hard business metadata filters ("Must be Rocket Delivery eligible and under ₩150,000"). Passing such massive queries straight to large context LLMs introduces extreme latency, non-deterministic outputs, and massive token overhead.
@@ -49,9 +48,11 @@ I engineered a modular, end-to-end Asynchronous Two-Stage Retrieval architecture
 Action
 Decoupled Data Infrastructure (infrastructure/): Implemented the Dependency Inversion Principle using an abstract interface (base_store.py). Engineered production-ready, database-agnostic connector implementations for Qdrant (qdrant_impl.py via HTTP/2 gRPC) and Milvus (milvus_impl.py via segment pools), blocking memory-lockouts and vertical scale bottlenecks.
 
-Two-Stage Retrieval Optimization (core/): * Stage 1 (High Recall): Configured vector indices to leverage native HNSW graphs optimized with relational pre-filtering payloads (matching vectors only if shipping and pricing constraints are met), drastically reducing downstream search spaces.
+Two-Stage Retrieval Optimization (core/):
 
-Stage 2 (High Precision): Routed coarse candidate arrays to a decoupled Triton Inference Server architecture via an asynchronous gRPC client (triton_client.py), computing deep token-level cross-attention matrices via a PyTorch Cross-Encoder framework.
+Stage 1 (High Recall): Configured vector indices to leverage native HNSW graphs optimized with relational pre-filtering payloads (matching vectors only if shipping and pricing constraints are met), drastically reducing downstream search spaces.
+
+Stage 2 (High Precision): Routed coarse candidate arrays to a decoupled Triton Inference Server architecture via an asynchronous gRPC client (triton_client.py), computing dense token-level cross-attention matrices via a PyTorch Cross-Encoder framework.
 
 High-Concurrency Serving (main.py): Built a non-blocking execution router using Python AsyncIO inside the central gateway (gateway.py). Implemented defensive circuit breakers and a 50ms fast-timeout fallback strategy to maintain system availability during downstream connection degradation.
 
@@ -74,13 +75,15 @@ Task (과제)
 Action (수행 내용)
 디커플링된 데이터 인프라 (infrastructure/): 추상 인터페이스(base_store.py)를 기반으로 의존성 주입(Dependency Inversion) 패턴을 확립했습니다. 고성능 gRPC 통신을 활용하는 Qdrant 구현체(qdrant_impl.py)와 가상 세그먼트 풀을 활용하는 Milvus 구현체(milvus_impl.py)를 교체 가능하도록 설계하여 단일 노드의 메모리 서빙 한계를 제거했습니다.
 
-2단계 검색 구조(Two-Stage Retrieval) 최적화 (core/): * 1단계 (하이 리콜): 데이터베이스 레이어에서 로켓배송 조건 등을 고속 판별하는 Pre-filtering HNSW 그래프 색인을 적용해 검색 후보군을 1차적으로 압축했습니다.
+2단계 검색 구조(Two-Stage Retrieval) 최적화 (core/):
+
+1단계 (하이 리콜): 데이터베이스 레이어에서 로켓배송 조건 등을 고속 판별하는 Pre-filtering HNSW 그래프 색인을 적용해 검색 후보군을 1차적으로 압축했습니다.
 
 2단계 (고정밀): 추출된 후보군을 비동기 클라이언트(triton_client.py)를 통해 Triton Inference Server로 이관하고, PyTorch 기반 Cross-Encoder 상호작용 매트릭스 연산을 수행하여 에이전트의 환각 현상을 방지했습니다.
 
 고동시성 서빙 인프라 (main.py): 코어 게이트웨이(gateway.py) 내부에 Python AsyncIO 비동기 이벤트 루프를 구축해 입출력(I/O) 병목을 차단했습니다. 다운스트림 장애 상황을 대비해 50ms 타임아웃 서킷 브레이커 방어 로직을 구현하여 시스템 가용성을 보장했습니다.
 
-엔터프라이즈 파이프라인 설계: 페타바이트급 데이터 정제를 위한 Apache Spark, 분산 다중 GPU 인코딩을 위한 Ray, 전체 파이프라인의 자동 배포 및 주기적 동기화를 위한 Apache Airflow 및 Kubeflow 아키텍처 매니페스트를 수립했습니다.
+엔터프라이즈 파이프라인 설계: 페타바이트급 데이터 정제를 위한 Apache Spark, 분산 다중 GPU 인코딩을 위한 Ray, 전체 파이프라인의 자동 배포 및 주기적 동기화를 위한 Apache Airflow 및 Kubeflow 아키처 매니페스트를 수립했습니다.
 
 Result (결과)
 단일 노드의 메모리 한계와 동시성 락(Lock) 문제를 원천 차단하는 프로덕션급 인프라 청사진을 입증했습니다.
@@ -114,7 +117,7 @@ Coupang-AI-Agent/
 └── main.py                  # System Integration Entrypoint
 🛠️ Deep Technical Stack Purpose Matrix / 기술 스택 활용 목적
 1. ML Frameworks & Architectures
-PyTorch / TensorFlow: Recommendation engines, search representation learning, and deep neural ranking model compilation. / 추천 엔진, 검색 모델 학습 및 배포를 지원하는 러닝 아키텍처 백엔드.
+PyTorch / TensorFlow: Recommendation engines, search representation learning, and deep neural ranking model compilation. / 추천 엔진, 검색 모델 학습 및 배포를 지원하는 러닝 아키처 백엔드.
 
 Transformers & HuggingFace: Tokenization profiles interpreting semantic user request properties online. / 자연어 검색어 문맥 인코딩 및 실시간 텍스트 토큰화 레이어.
 
@@ -125,7 +128,7 @@ Qdrant & Milvus: Distributed cloud-native engine components decoupling storage s
 
 Embedding-Based Retrieval (EBR) & Hybrid Search: Blending vectorized mathematical constraints with strict relational enterprise attributes. / 고차원 벡터 유사도와 실시간 커머스 제약 조건을 DB 엔진 내부에서 병렬 처리하는 기술.
 
-Retrieval-Augmented Generation (RAG): Context isolation pipelines serving verified transaction records to block hallucinated text formats. / 실시간 재고 상태 정보를 결합해 에이전트의 잘못된 상품 추천을 차단하는 신뢰성 보장 아키텍처.
+Retrieval-Augmented Generation (RAG): Context isolation pipelines serving verified transaction records to block hallucinated text formats. / 실시간 재고 상태 정보를 결합해 에이전트의 잘못된 상품 추천을 차단하는 신뢰성 보장 아키처.
 
 3. Data Engineering & Scale
 Apache Spark: High-throughput batch computing engines extracting properties from raw tabular structures. / 페타바이트 단위의 이커머스 로그 호수에서 대규모 데이터를 정제하고 변환하는 핵심 분산 엔진.
