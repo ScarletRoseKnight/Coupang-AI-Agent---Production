@@ -1,0 +1,23 @@
+# deployment/triton_model_repo/cross_encoder/config.pbtxt
+name: "cross_encoder"
+platform: "pytorch_libtorch"
+max_batch_size: 128
+
+input [
+  { name: "input_ids", data_type: TYPE_INT64, dims: [ -1 ] },
+  { name: "attention_mask", data_type: TYPE_INT64, dims: [ -1 ] }
+]
+output [
+  { name: "relevance_scores", data_type: TYPE_FP32, dims: [ 1 ] }
+]
+
+instance_group [
+  {
+    count: 2
+    kind: KIND_GPU
+  }
+]
+
+dynamic_batching {
+  max_queue_delay_microseconds: 5000
+}

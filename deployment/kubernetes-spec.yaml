@@ -1,0 +1,54 @@
+# deployment/kubernetes-spec.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupang-ai-agent-gateway
+  namespace: core-production
+spec:
+  replicas: 10 # High availability target baseline configuration
+  selector:
+    matchLabels:
+      app: ai-agent-gateway
+  template:
+    metadata:
+      labels:
+        app: ai-agent-gateway
+    spec:
+      containers:
+      - name: gateway-container
+        image: coupang-registry.internal/ai-agent-gateway:v2.6.0
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: "4"
+            memory: 8Gi
+          requests:
+            cpu: "2"
+            memory: 4Gi
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gateway-horizontal-scaler
+  namespace: core-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coupang-ai-agent-gateway
+  minReplicas: 10
+  maxReplicas: 200
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
