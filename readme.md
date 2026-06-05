@@ -13,6 +13,7 @@
 ```
 2. 🔍 Component Breakdown & Core Engineering Facts / 각 파일의 명확한 역할과 엔지니어링 팩트
 
+### 가. Real-Time Traffic Orchestration & Multi-Objective Ranking
 ### 실시간 트래픽 처리 및 복합 비즈니스 랭킹 결합(`core/`)
 
 * **`gateway.py` (Asynchronous ASGI Web Server Engine / ASGI 웹서버 엔진)**
