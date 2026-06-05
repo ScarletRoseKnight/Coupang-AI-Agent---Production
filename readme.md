@@ -143,13 +143,13 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
 
 8. 🚀 Key Architectural Pillars / 핵심 아키텍처 요소
 
-### 1. Data & Training Lifecycle (데이터 및 학습 라이프사이클)
+가. Data & Training Lifecycle (데이터 및 학습 라이프사이클)
 * **Orchestration:** Managed via Apache Airflow scheduling to automate workloads from raw SQL/BigQuery data logs.
 * **Data Processing:** Powered by an Apache Spark cluster for petabyte-scale ETL pipelines and clickstream aggregation.
 * **Distributed ML:** Utilizes Ray for distributed PyTorch and Hugging Face Transformers embedding generation.
 * **Experimentation:** Leverages MLflow for hyperparameter tracking and managing the central Model Registry.
 
-### 2. Low-Latency Production Runtime (초저지연 프로덕션 런타임)
+나. Low-Latency Production Runtime (초저지연 프로덕션 런타임)
 * **Core Agent Gateway:** Built with asynchronous Python (AsyncIO) and Hugging Face Tokenizers for ultra-fast, non-blocking request handling.
 * **Model Serving:** Powered by Triton Inference Server executing optimized PyTorch and Cross-Encoder models.
 * **Vector Indexing:** Uses a Qdrant or Milvus cluster to perform high-recall, pre-filtered Stage-1 vector search.
