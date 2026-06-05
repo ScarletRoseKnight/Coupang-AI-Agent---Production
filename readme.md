@@ -26,7 +26,7 @@
 
 * **`triton_client.py` (High-Throughput Inference Client / 고성능 추론 클라이언트)**
   * **한글:** 실시간 텍스트 인코딩 단계를 제어하고, 중앙화된 Triton 인프라 클러스터와의 엄격한 고속 추론 프로토콜 통신을 관장합니다.
-  * * **핵심 팩트:** 실시간 문자열 처리 시 발생하는 CPU 병목을 방어하기 위해 허깅페이스의 Rust 기반 Fast Tokenizer를 장착했습니다. HTTP 통신 과정에서 발생하는 JSON 스트링 직렬화 비용을 원천 차단하고자 **`binary_data=True`** 옵션을 통해 원시 바이트 패킷 형태로 텐서를 전송합니다. 특히 전체 시스템의 p99 지연 시간 SLA를 사수하고 큐 정체로 인한 장애 전파를 막기 위해, 50ms 타임아웃(`timeout=0.05`) 제약 기반의 **서킷 브레이커(Fallback)** 방어 레이어를 구축했습니다.
+  * **핵심 팩트:** 실시간 문자열 처리 시 발생하는 CPU 병목을 방어하기 위해 허깅페이스의 Rust 기반 Fast Tokenizer를 장착했습니다. HTTP 통신 과정에서 발생하는 JSON 스트링 직렬화 비용을 원천 차단하고자 **`binary_data=True`** 옵션을 통해 원시 바이트 패킷 형태로 텐서를 전송합니다. 특히 전체 시스템의 p99 지연 시간 SLA를 사수하고 큐 정체로 인한 장애 전파를 막기 위해, 50ms 타임아웃(`timeout=0.05`) 제약 기반의 **서킷 브레이커(Fallback)** 방어 레이어를 구축했습니다.
   * **(EN):** Orchestrates the encoding phase and handles strict inference protocol communications with the centralized Triton Inference cluster.
   * **Engineering Fact:** Mitigates severe CPU bottlenecks by integrating HuggingFace's Rust-backed Fast Tokenizer to compute contextual string sequences in real time. To eliminate JSON overhead and string serialization costs over HTTP, it utilizes **`binary_data=True`** parameters to streamline raw byte tensor packets. Critically, to preserve strict p99 latency SLAs and guard against cascading downstream queue timeouts, it encapsulates a **Circuit Breaker** fallback layer governed by a definitive 50ms constraint (`timeout=0.05`), returning zeroed arrays if the server encounters cluster degradation.
   
