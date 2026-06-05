@@ -1,5 +1,4 @@
-# Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent 
-# 쿠팡 초저지연 멀티 스테이지 상품 검색 에이전트
+# Coupang-Scale Low-Latency Multi-Stage Product Discovery Agent 쿠팡 초저지연 멀티 스테이지 상품 검색 에이전트
 
 An enterprise-grade blueprint and proof-of-concept architecture for high-throughput, asymmetric multi-stage semantic product search. This repository models how to handle petabyte-scale e-commerce catalogs under strict transaction and latency boundaries (<250ms p99 SLA) using a decoupled data lifecycle and state-of-the-art MLOps tools.
 
