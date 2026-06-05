@@ -13,23 +13,22 @@
 ```
 2. 🔍 Component Breakdown & Core Engineering Facts / 각 파일의 명확한 역할과 엔지니어링 팩트
 
-### 가. Real-Time Traffic Orchestration & Multi-Objective Ranking
-### 실시간 트래픽 처리 및 복합 비즈니스 랭킹 결합(`core/`)
+### 가. 실시간 트래픽 처리 및 복합 비즈니스 랭킹 결합(`core/`)
 
 * **`gateway.py` (Asynchronous ASGI Web Server Engine / ASGI 웹서버 엔진)**
-  * **영문 (EN):** Ingests external client search requests asynchronously utilizing `FastAPI`’s `async/await` paradigm to handle thousands of concurrent connections without thread blocking.
+  * **(EN):** Ingests external client search requests asynchronously utilizing `FastAPI`’s `async/await` paradigm to handle thousands of concurrent connections without thread blocking.
   * **한글 (KO):** 외부 클라이언트의 검색 요청을 `FastAPI` 비동기(`async/await`) 루프 체계로 수신하여, 스레드 블로킹 없이 수천 건의 동시 연결을 안정적으로 처리합니다.
   * **Engineering Fact:** Implements a sophisticated **Multi-Objective Optimization** ranking algorithm directly into the final hot path. Instead of blindly sorting items by raw machine learning scores, it dynamically computes a hybrid rank by combining the contextual semantic relevance (`base_ml_score`) with programmatic business modifiers: the ad sponsored boost (`ad_boost_multiplier`) and historical click-through rate adjustments (`ctr_score_weight`). For maximum execution performance under heavy production traffic, the entry point boots `uvicorn` utilizing multiple processes (`workers=4`) bound to the high-performance `uvloop` event loop.
   * **핵심 팩트:** 단순 ML 스코어 줄세우기를 넘어, 딥러닝 문맥 점수(`base_ml_score`)에 쿠팡 비즈니스의 핵심인 광고 가중치(`ad_boost_multiplier`)와 클릭률 보정값(`ctr_score_weight`)을 결합하는 **다중 목적 최적화(Multi-Objective Optimization)** 랭킹 수식을 실시간 핫 패스에 구현했습니다. 트래픽 처리량을 극대화하기 위해 `uvicorn` 멀티 프로세스 워커(`workers=4`) 및 고속 `uvloop` 이벤트 엔진을 연동했습니다.
 
 * **`triton_client.py` (High-Throughput Inference Client / 고성능 추론 클라이언트)**
-  * **영문 (EN):** Orchestrates the encoding phase and handles strict inference protocol communications with the centralized Triton Inference cluster.
+  * **(EN):** Orchestrates the encoding phase and handles strict inference protocol communications with the centralized Triton Inference cluster.
   * **한글 (KO):** 실시간 텍스트 인코딩 단계를 제어하고, 중앙화된 Triton 인프라 클러스터와의 엄격한 고속 추론 프로토콜 통신을 관장합니다.
   * **Engineering Fact:** Mitigates severe CPU bottlenecks by integrating HuggingFace's Rust-backed Fast Tokenizer to compute contextual string sequences in real time. To eliminate JSON overhead and string serialization costs over HTTP, it utilizes **`binary_data=True`** parameters to streamline raw byte tensor packets. Critically, to preserve strict p99 latency SLAs and guard against cascading downstream queue timeouts, it encapsulates a **Circuit Breaker** fallback layer governed by a definitive 50ms constraint (`timeout=0.05`), returning zeroed arrays if the server encounters cluster degradation.
   * **핵심 팩트:** 실시간 문자열 처리 시 발생하는 CPU 병목을 방어하기 위해 허깅페이스의 Rust 기반 Fast Tokenizer를 장착했습니다. HTTP 통신 과정에서 발생하는 JSON 스트링 직렬화 비용을 원천 차단하고자 **`binary_data=True`** 옵션을 통해 원시 바이트 패킷 형태로 텐서를 전송합니다. 특히 전체 시스템의 p99 지연 시간 SLA를 사수하고 큐 정체로 인한 장애 전파를 막기 위해, 50ms 타임아웃(`timeout=0.05`) 제약 기반의 **서킷 브레이커(Fallback)** 방어 레이어를 구축했습니다.
   
-### 나. Analytical Data Lake & Pipeline Orchestration (`pipelines/` & `orchestration/`)
-### 백엔드 빅데이터 플랫폼 및 주기적 인덱싱 파이프라인
+### 나. 백엔드 빅데이터 플랫폼 및 주기적 인덱싱 파이프라인 (`pipelines/` & `orchestration/`)
+### Analytical Data Lake & Pipeline Orchestration
 
 * **`data_etl_spark.py` (Enterprise-Scale Spark Pipeline / 대규모 스케일 Spark 파이프라인)**
   * **영문 (EN):** Processes massive distributed user clickstream log dumps and raw catalogs across the company’s data lake to build aggregated analytical feature stores.
@@ -43,8 +42,8 @@
   * **Engineering Fact:** Configures explicit task sequence parameters (`execute_spark_etl >> execute_distributed_embeddings`) using the `KubernetesPodOperator`. This structural design ensures that the high-recall Ray multi-GPU embedding cluster is only initialized after the upstream PySpark data lake synchronization job terminates with an absolute success state, maintaining transactional consistency across the vector storage tier.
   * **핵심 팩트:** `KubernetesPodOperator` 환경에서 작업 간 선후 관계 파라미터(`execute_spark_etl >> execute_distributed_embeddings`)를 명확히 구성했습니다. 이를 통해 업스트림의 PySpark 데이터 정제 작업이 완벽히 정합성을 유지하며 정상 종료된 경우에만, 다운스트림인 Ray 멀티 GPU 분산 임베딩 클러스터가 기동되도록 강제하여 벡터 스토리지 전체의 트랜잭션 일관성을 보장합니다.
 
-### 다. Isolated Storage Abstraction & Cloud-Native Deployment (`infrastructure/` & `deployment/`)
-### 스토리지 격리 추상화 및 클라우드 네이티브 배포 레이어
+### 다. 스토리지 격리 추상화 및 클라우드 네이티브 배포 레이어 (`infrastructure/` & `deployment/`)
+### Isolated Storage Abstraction & Cloud-Native Deployment 
 
 * **`base_store.py`, `qdrant_impl.py`, `milvus_impl.py` (Vector Store Layer Abstraction / 벡터 스토어 레이어 추상화)**
   * **영문 (EN):** Acts as the persistent decoupled layer isolating core routing logic from specialized database client SDK specifications.
