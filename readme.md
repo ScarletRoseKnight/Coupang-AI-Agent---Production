@@ -2,7 +2,7 @@
 
 본 리포지토리는 고처리량 및 비대칭형 멀티 스테이지 시맨틱 상품 검색을 구현한 엔터프라이즈급 아키텍처 청사진입니다. 분리된 데이터 라이프사이클과 최신 MLOps 도구를 활용하여, 엄격한 트랜잭션 및 지연 시간 제약 조건(<250ms p99 SLA) 하에서 페타바이트 규모의 이커머스 카탈로그를 처리하는 방법을 모델링합니다.
 
-1. 📂 Directory Structure / 디렉토리 구조
+## 1. 📂 Directory Structure / 디렉토리 구조
 
 ```text
 ├── 📂 core/              # AsyncIO Gateway & Triton High-Throughput Client
@@ -11,10 +11,10 @@
 ├── 📂 orchestration/     # Airflow ETL Pipeline DAG
 └── 📂 pipelines/         # Spark Batch Processing & Ray Distributed Embedding
 ```
-2. 🔍 Component Breakdown & Core Engineering Facts / 각 파일의 명확한 역할과 엔지니어링 팩트
+## 2. 🔍 Component Breakdown & Core Engineering Facts / 각 파일의 명확한 역할과 엔지니어링 팩트
 
-### 가. 실시간 트래픽 처리 및 복합 비즈니스 랭킹 결합 (`core/`)
-### Real-Time Traffic Orchestration & Multi-Objective Ranking
+가. 실시간 트래픽 처리 및 복합 비즈니스 랭킹 결합 (`core/`)
+Real-Time Traffic Orchestration & Multi-Objective Ranking
 
 * **`gateway.py` (Asynchronous ASGI Web Server Engine / ASGI 웹서버 엔진)**
   * **한글:** 외부 클라이언트의 검색 요청을 `FastAPI` 비동기(`async/await`) 루프 체계로 수신하여, 스레드 블로킹 없이 수천 건의 동시 연결을 안정적으로 처리합니다.
@@ -74,7 +74,7 @@
   * **Engineering Fact:** Guarantees web tier resiliency by specifying an active multi-pod deployment baseline paired with a native **HorizontalPodAutoscaler (HPA)** configured to automatically elastic-scale from a minimum of 10 up to 200 replicas during massive traffic spikes. Employs predictive `readinessProbe` hooks for traffic control during continuous deployment cycles, while matching the system with Kubeflow pipeline code designed to automate model validation and continuous evaluation thresholds.
  ---
 
-3. 🏗️ System Topology & Dataflow / 시스템 구조도
+## 3. 🏗️ System Topology & Dataflow / 시스템 구조도
 
 ```text
  [ Raw E-Commerce Logs / Catalogs (SQL / BigQuery) ]
@@ -105,7 +105,7 @@
  │                          (Stage-1 Pre-filtered Search) │
  └────────────────────────────────────────────────────────┘
 ```
-4. 🛠️ Technology Stack / 기술 스택
+## 4. 🛠️ Technology Stack / 기술 스택
 
 * **Data Lifecycle:** Apache Spark, Apache Airflow, BigQuery, SQL
 * **Distributed AI / MLOps:** Ray, PyTorch, Hugging Face Transformers, MLflow, Kubeflow
@@ -113,7 +113,7 @@
 * **Vector DB Ecosystem:** Qdrant, Milvus
 * **Infrastructure:** Kubernetes Cluster
 
-5. 🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적
+## 5. 🛠️ Technology Stack & Purpose / 핵심 기술 및 활용 목적
 
 | Category | Component | Purpose / 활용 목적 |
 | :--- | :--- | :--- |
@@ -123,13 +123,13 @@
 | **Serving / MLOps** | Triton, Kubernetes, Airflow | Dynamic Batching을 활용한 모델 추론 가속 및 파이프라인 배포 자동화 |
 ---
 
-6. 🎯 Production SLA / 성능 목표
+## 6. 🎯 Production SLA / 성능 목표
 
 * **Stage-1 벡터 검색 지연 시간:** `< 15ms` (HNSW index pre-filtered)
 * **Stage-2 Triton 모델 추론 지연 시간:** `< 35ms` (Dynamic batching queued)
 * **코어 게이트웨이 최종 p99 목표 지연 시간:** `< 120ms`
   
-7. 🔍 Search Pipeline Architecture / 검색 파이프라인 구조
+## 7. 🔍 Search Pipeline Architecture / 검색 파이프라인 구조
 
 The system employs a multi-stage approach to balance latency boundaries (<250ms p99 SLA) with high retrieval accuracy:
 
@@ -141,7 +141,7 @@ The system employs a multi-stage approach to balance latency boundaries (<250ms 
    * Top candidates are passed to Triton Inference Server.
    * A heavy Cross-Encoder model runs intense sequence-pair interactions to output final optimized product rankings.
 
-8. 🚀 Key Architectural Pillars / 핵심 아키텍처 요소
+## 8. 🚀 Key Architectural Pillars / 핵심 아키텍처 요소
 
 가. Data & Training Lifecycle (데이터 및 학습 라이프사이클)
 * **Orchestration:** Managed via Apache Airflow scheduling to automate workloads from raw SQL/BigQuery data logs.
