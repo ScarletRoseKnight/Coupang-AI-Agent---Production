@@ -25,7 +25,7 @@ triton_client.py (고성능 추론 클라이언트): 허깅페이스의 Rust 기
 
 ② 백엔드 빅데이터 플랫폼 및 주기적 인덱싱 (pipelines/ & orchestration/)
 
-data_etl_spark.py (시니어급 Spark 파이프라인): 대규모 분산 환경에서 로그 데이터를 긁어와 노출(impression), 클릭(click), 구매(purchase) 데이터를 분산 집계(groupBy().agg())합니다. 특히 데이터 처리 중 터지기 쉬운 0 나누기 에러(Division by Zero)를 F.when().otherwise()로 원천 방어하고, 조인 스큐(Data Skew)를 막기 위해 na.fill() 처리 후 카테고리별로 파티셔닝 적재를 수행하는 완벽한 상용 사양입니다.
+data_etl_spark.py (Spark 파이프라인): 대규모 분산 환경에서 로그 데이터를 긁어와 노출(impression), 클릭(click), 구매(purchase) 데이터를 분산 집계(groupBy().agg())합니다. 특히 데이터 처리 중 터지기 쉬운 0 나누기 에러(Division by Zero)를 F.when().otherwise()로 원천 방어하고, 조인 스큐(Data Skew)를 막기 위해 na.fill() 처리 후 카테고리별로 파티셔닝 적재를 수행하는 완벽한 상용 사양입니다.
 
 catalog_indexing_dag.py (Airflow 스케줄러): 위에서 언급한 Spark 분산 ETL 작업이 성공적으로 완료되면, 이어서 Ray 분산 클러스터를 가동해 대규모 상품 카탈로그의 고차원 벡터 임베딩을 빌드하도록 데이터 의존성 셔플 흐름(execute_spark_etl >> execute_distributed_embeddings)을 제어합니다.
 
